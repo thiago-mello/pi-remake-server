@@ -43,6 +43,12 @@ export default class User {
   })
   isAdmin!: boolean;
 
+  @Column({
+    default: false,
+    name: 'confirmed_email',
+  })
+  confirmedEmail!: boolean;
+
   @ManyToOne(() => Team, (team) => team.users, { nullable: false })
   @JoinColumn({ name: 'team_id' })
   team!: Team;

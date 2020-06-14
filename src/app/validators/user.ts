@@ -18,6 +18,7 @@ async function validateUserCreation(
       .string()
       .required()
       .oneOf([yup.ref('password')]),
+    team: yup.number().min(1).required(),
   });
 
   try {

@@ -25,7 +25,7 @@ class LoginController {
         expiresIn: authConfig.expiresIn,
       });
 
-      return res.json({ token });
+      return res.json({ id, email, token });
     } catch (err) {
       return res.status(500).json({ error: 'Erro ao fazer login.' });
     }
