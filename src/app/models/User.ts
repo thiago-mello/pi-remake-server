@@ -18,23 +18,42 @@ export default class User {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({
-    nullable: false,
-  })
+  @Column({ nullable: false })
   name!: string;
 
-  @Column({
-    nullable: false,
-    unique: true,
-  })
+  @Column({ unique: true, nullable: false })
   email!: string;
+
+  @Column({ name: 'birth_date', nullable: false })
+  birthDate!: Date;
+
+  @Column({ nullable: false })
+  course!: string;
+
+  @Column({ nullable: false, name: 'start_date' })
+  startDate!: Date;
+
+  @Column({ nullable: false, name: 'postal_code' })
+  postalCode!: string;
+
+  @Column({ nullable: false })
+  address!: string;
+
+  @Column({ nullable: false })
+  phone!: string;
+
+  @Column({ nullable: false })
+  cpf!: string;
+
+  @Column({ nullable: false })
+  rg!: string;
+
+  @Column({ default: false, name: 'is_active' })
+  isActive!: boolean;
 
   password!: string;
 
-  @Column({
-    nullable: false,
-    name: 'password_hash',
-  })
+  @Column({ name: 'password_hash', nullable: true })
   private passwordHash!: string;
 
   @Column({
@@ -60,14 +79,25 @@ export default class User {
   updatedAt!: Date;
 
   @BeforeInsert()
-  @BeforeUpdate()
-  private async hashPassword(): Promise<void> {
+  async hashPassword(): Promise<void> {
     if (this.password) {
       this.passwordHash = await bcrypt.hash(this.password, 12);
     }
   }
 
   async checkPassword(password: string): Promise<boolean> {
-    return bcrypt.compare(password, this.passwordHash);
+    if (this.passwordHash) {
+      return bcrypt.compare(password, this.passwordHash);
+    }
+
+    return false;
+  }
+
+  hasPassword(): boolean {
+    if (this.passwordHash) {
+      return true;
+    }
+
+    return false;
   }
 }

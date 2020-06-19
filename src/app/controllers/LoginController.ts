@@ -11,12 +11,12 @@ class LoginController {
 
     try {
       const user = await repository.findOne({ where: { email } });
-      if (!user) {
+      if (!user || !(await user.checkPassword(password))) {
         return res.status(400).json({ error: 'E-mail ou senha incorretos.' });
       }
 
-      if (!(await user.checkPassword(password))) {
-        return res.status(400).json({ error: 'E-mail ou senha incorretos.' });
+      if (!user.confirmedEmail) {
+        return res.status(403).json({ error: 'O e-mail não foi confirmado.' });
       }
 
       const { id, name, isAdmin } = user;
@@ -27,6 +27,7 @@ class LoginController {
 
       return res.json({ id, email, token });
     } catch (err) {
+      console.log(err);
       return res.status(500).json({ error: 'Erro ao fazer login.' });
     }
   }
