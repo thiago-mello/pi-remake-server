@@ -1,7 +1,10 @@
 import { Router } from 'express';
+
 import UserController from '../app/controllers/UserController';
 import LoginController from '../app/controllers/LoginController';
 import UserRegistrationController from '../app/controllers/UserRegistrationController';
+import ProjectController from '../app/controllers/ProjectController';
+
 import validator from '../app/validators';
 import verifyAuthToken from '../app/middlewares/auth';
 
@@ -29,6 +32,11 @@ routes.post(
   validator.user.validateUserCreation,
   UserController.store,
 );
+
+routes.post('/projects', ProjectController.store);
+routes.delete('/projects/:id', ProjectController.delete);
+routes.get('/projects', ProjectController.index);
+routes.get('/projects/:id', ProjectController.show);
 
 routes.get('/', async (req, res) => {
   return res.json({
