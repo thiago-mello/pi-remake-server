@@ -4,6 +4,7 @@ import UserController from '../app/controllers/UserController';
 import LoginController from '../app/controllers/LoginController';
 import UserRegistrationController from '../app/controllers/UserRegistrationController';
 import ProjectController from '../app/controllers/ProjectController';
+import EmailConfirmationController from '../app/controllers/EmailConfirmationController';
 
 import validator from '../app/validators';
 import verifyAuthToken from '../app/middlewares/auth';
@@ -23,6 +24,8 @@ routes.put(
   UserRegistrationController.update,
 );
 routes.get('/members/register', UserRegistrationController.show);
+
+routes.put('/emailConfirmations', EmailConfirmationController.update);
 
 // Routes below this point need authentication
 routes.use(verifyAuthToken);

@@ -38,8 +38,13 @@ class UserRegistrationController {
         const { id, name } = await transactionManager.save(user);
 
         const tokenValue = crypto.randomBytes(48).toString('hex');
+        console.log('token:', tokenValue);
+        const tokenHash = crypto
+          .createHash('sha256')
+          .update(tokenValue)
+          .digest('hex');
         const token = tokenRepository.create({
-          token: tokenValue,
+          token: tokenHash,
           type: 'confirmation',
           user: user,
         });
@@ -98,8 +103,12 @@ class UserRegistrationController {
         await transactionManager.save(user);
 
         const tokenValue = crypto.randomBytes(48).toString('hex');
+        const tokenHash = crypto
+          .createHash('sha256')
+          .update(tokenValue)
+          .digest('hex');
         const token = tokenRepository.create({
-          token: tokenValue,
+          token: tokenHash,
           type: 'confirmation',
           user: user,
         });
