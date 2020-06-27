@@ -28,8 +28,16 @@ export default class ProjectRepository extends Repository<Project> {
     }
 
     if (options?.includeManagers) {
-      project.leftJoinAndSelect('project.managers', 'managers');
-      selectAttributes.push('managers.name', 'managers.id', 'managers.email');
+      project
+        .leftJoinAndSelect('project.managers', 'managers')
+        .leftJoinAndSelect('managers.team', 'managerTeam');
+      selectAttributes.push(
+        'managers.name',
+        'managers.id',
+        'managers.email',
+        'managerTeam.id',
+        'managerTeam.name',
+      );
     }
 
     return project.select(selectAttributes).getOne();

@@ -32,11 +32,13 @@ routes.post(
   validator.user.validateUserCreation,
   UserController.store,
 );
+routes.put('/members/:id', UserController.update);
 
 routes.post('/projects', ProjectController.store);
 routes.delete('/projects/:id', ProjectController.delete);
 routes.get('/projects', ProjectController.index);
 routes.get('/projects/:id', ProjectController.show);
+routes.put('/projects/:id', ProjectController.update);
 
 routes.get('/', async (req, res) => {
   return res.json({

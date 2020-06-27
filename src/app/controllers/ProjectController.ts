@@ -90,6 +90,40 @@ class ProjectController {
       return res.status(500).json({ error: 'Erro ao buscar projeto.' });
     }
   }
+
+  async update(req: Request, res: Response) {
+    const { id } = req.params;
+    const userRepo = getRepository(User);
+    const projectRepo = getRepository(Project);
+    const { members: memberIds, managers: managerIds } = req.body;
+    let managers;
+
+    try {
+      const members = await userRepo.findByIds(memberIds);
+      if (!members.length) {
+        return res
+          .status(400)
+          .json({ error: 'Nenhum membro válido selecionado.' });
+      }
+
+      if (managerIds) {
+        managers = await userRepo.findByIds(managerIds);
+      }
+
+      const project = await projectRepo.findOne(id);
+      if (!project) {
+        return res.status(404).json({ error: 'Projeto não encontrado.' });
+      }
+
+      projectRepo.merge(project, { ...req.body, members, managers });
+      await projectRepo.save(project);
+
+      return res.json({ id: project.id });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: 'Erro ao atualizar projeto.' });
+    }
+  }
 }
 
 export default new ProjectController();
