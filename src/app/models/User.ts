@@ -8,9 +8,11 @@ import {
   BeforeInsert,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 import Team from './Team';
+import Post from './Post';
 
 @Entity()
 export default class User {
@@ -70,6 +72,9 @@ export default class User {
   @ManyToOne(() => Team, (team) => team.users, { nullable: false })
   @JoinColumn({ name: 'team_id' })
   team!: Team;
+
+  @OneToMany(() => Post, (post) => post.author)
+  posts!: Post[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
