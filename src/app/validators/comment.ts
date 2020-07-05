@@ -1,18 +1,14 @@
 import * as yup from 'yup';
 import { Request, Response, NextFunction } from 'express';
 
-async function validateLogin(
+async function validateComment(
   req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void | Response> {
   const rules = yup.object().shape({
-    email: yup
-      .string()
-      .email()
-      .matches(/@elojr.com.br$/)
-      .required(),
-    password: yup.string().min(8).required(),
+    content: yup.string().required().max(280),
+    post: yup.number().integer().min(1).required(),
   });
 
   try {
@@ -20,10 +16,8 @@ async function validateLogin(
     return next();
   } catch (err) {
     console.log(err);
-    return res.status(400).json({ error: 'Dados Inválidos' });
+    return res.status(400).json({ error: 'Dados inválidos.' });
   }
 }
 
-export default {
-  validateLogin,
-};
+export default { validateComment };

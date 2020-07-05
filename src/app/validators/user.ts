@@ -9,7 +9,7 @@ async function validateUserCreation(
   req: Request,
   res: Response,
   next: NextFunction,
-): Promise<void | any> {
+): Promise<void | Response> {
   const rules = yup.object().shape({
     name: yup.string().max(255).required(),
     email: yup
@@ -20,8 +20,8 @@ async function validateUserCreation(
     team: yup.number().min(1).required(),
     birthDate: yup.date().required().max(subYears(new Date(), 18)),
     course: yup.string().required(),
-    startDate: yup.date().max(new Date()),
-    postalCode: yup.string().length(8),
+    startDate: yup.date().max(new Date()).required(),
+    postalCode: yup.string().length(8).required(),
     address: yup.string().required(),
     phone: yup.string().required().matches(phoneRegex),
     cpf: yup
@@ -44,7 +44,7 @@ async function validateUserRegistration(
   req: Request,
   res: Response,
   next: NextFunction,
-): Promise<void | any> {
+): Promise<void | Response> {
   const rules = yup.object().shape({
     name: yup.string().max(255).required(),
     email: yup
@@ -55,8 +55,8 @@ async function validateUserRegistration(
     team: yup.number().min(1).required(),
     birthDate: yup.date().required().max(subYears(new Date(), 18)),
     course: yup.string().required(),
-    startDate: yup.date().max(new Date()),
-    postalCode: yup.string().length(8),
+    startDate: yup.date().max(new Date()).required(),
+    postalCode: yup.string().length(8).required(),
     address: yup.string().required(),
     phone: yup.string().required().matches(phoneRegex),
     cpf: yup
@@ -81,7 +81,7 @@ async function validatePasswordRegistration(
   req: Request,
   res: Response,
   next: NextFunction,
-): Promise<void | any> {
+): Promise<void | Response> {
   const rules = yup.object().shape({
     email: yup
       .string()

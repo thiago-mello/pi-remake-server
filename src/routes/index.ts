@@ -6,6 +6,7 @@ import UserRegistrationController from '../app/controllers/UserRegistrationContr
 import ProjectController from '../app/controllers/ProjectController';
 import EmailConfirmationController from '../app/controllers/EmailConfirmationController';
 import PostController from '../app/controllers/PostController';
+import CommentController from '../app/controllers/CommentController';
 
 import validator from '../app/validators';
 import verifyAuthToken from '../app/middlewares/auth';
@@ -44,10 +45,27 @@ routes.get('/projects', ProjectController.index);
 routes.get('/projects/:id', ProjectController.show);
 routes.put('/projects/:id', ProjectController.update);
 
-routes.post('/posts', PostController.store);
-routes.put('/posts/:id', PostController.update);
-routes.delete('/posts/:id', PostController.delete);
-routes.get('/posts', PostController.index);
+routes.post('/posts', validator.post.validatePost, PostController.store);
+routes.put('/posts/:id', validator.post.validatePost, PostController.update);
+routes.delete('/posts/:id', validator.url.validateUrl, PostController.delete);
+routes.get('/posts', validator.url.validateUrl, PostController.index);
+
+routes.post(
+  '/comments',
+  validator.comment.validateComment,
+  CommentController.store,
+);
+routes.put(
+  '/comments/:id',
+  validator.url.validateUrl,
+  validator.comment.validateComment,
+  CommentController.update,
+);
+routes.delete(
+  '/comments/:id',
+  validator.url.validateUrl,
+  CommentController.delete,
+);
 
 routes.get('/', async (req, res) => {
   return res.json({

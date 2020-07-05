@@ -1,29 +1,22 @@
 import * as yup from 'yup';
 import { Request, Response, NextFunction } from 'express';
 
-async function validateLogin(
+async function validatePost(
   req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void | Response> {
   const rules = yup.object().shape({
-    email: yup
-      .string()
-      .email()
-      .matches(/@elojr.com.br$/)
-      .required(),
-    password: yup.string().min(8).required(),
+    title: yup.string().required(),
+    content: yup.string().required(),
   });
 
   try {
     await rules.validate(req.body);
     return next();
   } catch (err) {
-    console.log(err);
-    return res.status(400).json({ error: 'Dados Inválidos' });
+    return res.status(400).json({ error: 'Dados inválidos.' });
   }
 }
 
-export default {
-  validateLogin,
-};
+export default { validatePost };
