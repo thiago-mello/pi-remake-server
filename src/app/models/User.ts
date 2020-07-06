@@ -49,7 +49,7 @@ export default class User {
   @Column({ nullable: false })
   rg!: string;
 
-  @Column({ default: false, name: 'is_active' })
+  @Column({ default: true, name: 'is_active' })
   isActive!: boolean;
 
   password!: string;

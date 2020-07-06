@@ -10,7 +10,9 @@ class LoginController {
     const repository = getRepository(User);
 
     try {
-      const user = await repository.findOne({ where: { email } });
+      const user = await repository.findOne({
+        where: { email, isActive: true },
+      });
       if (!user || !(await user.checkPassword(password))) {
         return res.status(400).json({ error: 'E-mail ou senha incorretos.' });
       }

@@ -7,6 +7,7 @@ import ProjectController from '../app/controllers/ProjectController';
 import EmailConfirmationController from '../app/controllers/EmailConfirmationController';
 import PostController from '../app/controllers/PostController';
 import CommentController from '../app/controllers/CommentController';
+import CommentReplyController from '../app/controllers/CommentReplyController';
 
 import validator from '../app/validators';
 import verifyAuthToken from '../app/middlewares/auth';
@@ -38,12 +39,26 @@ routes.post(
   UserController.store,
 );
 routes.put('/members/:id', UserController.update);
+routes.get('/members', UserController.index);
 
-routes.post('/projects', ProjectController.store);
-routes.delete('/projects/:id', ProjectController.delete);
-routes.get('/projects', ProjectController.index);
-routes.get('/projects/:id', ProjectController.show);
-routes.put('/projects/:id', ProjectController.update);
+routes.get('/projects', validator.url.validateUrl, ProjectController.index);
+routes.get('/projects/:id', validator.url.validateUrl, ProjectController.show);
+routes.post(
+  '/projects',
+  validator.project.validateProject,
+  ProjectController.store,
+);
+routes.delete(
+  '/projects/:id',
+  validator.url.validateUrl,
+  ProjectController.delete,
+);
+routes.put(
+  '/projects/:id',
+  validator.url.validateUrl,
+  validator.project.validateProject,
+  ProjectController.update,
+);
 
 routes.post('/posts', validator.post.validatePost, PostController.store);
 routes.put('/posts/:id', validator.post.validatePost, PostController.update);
@@ -65,6 +80,22 @@ routes.delete(
   '/comments/:id',
   validator.url.validateUrl,
   CommentController.delete,
+);
+routes.get(
+  '/comments/:postId',
+  validator.comment.validateCommentUrl,
+  CommentController.index,
+);
+
+routes.post(
+  '/commentReplies',
+  validator.comment.validateReply,
+  CommentReplyController.store,
+);
+routes.get(
+  '/commentReplies/:parentCommentId',
+  validator.comment.validateCommentUrl,
+  CommentReplyController.index,
 );
 
 routes.get('/', async (req, res) => {

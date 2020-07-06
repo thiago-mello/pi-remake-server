@@ -81,6 +81,25 @@ class CommentController {
       return res.status(500).json({ error: 'Erro ao deletar comentário.' });
     }
   }
+
+  async index(req: Request, res: Response) {
+    const { postId } = req.params;
+    const { page = 1 } = req.query;
+    const itemsPerPage = 10;
+    const commentRepo = getRepository(Comment);
+
+    try {
+      const [comments, count] = await commentRepo.findAndCount({
+        where: { post: postId, parentComment: null },
+        take: itemsPerPage,
+        skip: itemsPerPage * (Number(page) - 1),
+      });
+
+      return res.json({ count, comments });
+    } catch (err) {
+      return res.status(500).json({ error: 'Erro ao listar comentários.' });
+    }
+  }
 }
 
 export default new CommentController();

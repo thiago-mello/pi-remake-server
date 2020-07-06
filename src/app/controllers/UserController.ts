@@ -108,6 +108,27 @@ class UserController {
       return res.status(500).json({ error: 'Erro ao atualizar membro.' });
     }
   }
+
+  async index(req: Request, res: Response) {
+    const userRepo = getRepository(User);
+    const { page = 1 } = req.query;
+    const itemsPerPage = 10;
+
+    try {
+      const [users, count] = await userRepo.findAndCount({
+        where: { isActive: true },
+        order: { name: 'ASC' },
+        select: ['id', 'name', 'startDate', 'course'],
+        relations: ['team'],
+        take: itemsPerPage,
+        skip: itemsPerPage * (Number(page) - 1),
+      });
+
+      return res.json({ count, users });
+    } catch (err) {
+      return res.status(500).json({ error: 'Erro ao listar usuários.' });
+    }
+  }
 }
 
 export default new UserController();
